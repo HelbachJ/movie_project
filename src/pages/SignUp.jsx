@@ -1,7 +1,23 @@
-import React from "react";
-import { Link } from "react-router-dom";
+import React, { useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
+import { UserAuth } from "../context/AuthContext";
 
 const SignUp = () => {
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const { user, signUp } = UserAuth();
+  const navigate = useNavigate();
+
+  const submitHandler = async (e) => {
+    e.preventDefault();
+    try {
+      await signUp(email, password);
+      navigate('/');
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
   return (
     <>
       <div className="w-full h-screen">
@@ -13,17 +29,19 @@ const SignUp = () => {
         <div className="bg-black/60 fixed top-0 left-0 w-full h-screen"></div>
         <div className="fixed w-full px-4 py-24 z-50">
           <div className="max-w-[450px] h-[600px] mx-auto bg-black/75 text-white">
-            <div className="max-w-[120px] mx-auto py-16">
+            <div className="max-w-[320px] mx-auto py-16">
               <h1 className="text-3xl font-bold">Sign Up</h1>
-              <form className="w-full flex flex-col py-4">
+              <form onSubmit = {submitHandler} className="w-full flex flex-col py-4">
                 <input
-                  className="py-3 my-2 bg-gray-700 rounded"
+                onChange={(e) => setEmail(e.target.value)}
+                  className="p-3 my-2 bg-gray-700 rounded"
                   type="email"
                   placeholder="Email"
                   autoComplete="email"
                 />
                 <input
-                  className="py-3 my-2 bg-gray-700 rounded"
+                onChange={(e) => setPassword(e.target.value)}
+                  className="p-3 my-2 bg-gray-700 rounded"
                   type="password"
                   placeholder="Password"
                   autoComplete="current-password"
@@ -33,18 +51,16 @@ const SignUp = () => {
                 </button>
                 <div className="flex justify-between items-center text-small text-gray-600">
                   <p>
-                    <input className="mr-2" type="checkbox">
-                      Remember me
-                    </input>
+                    <input className="mr-2" type="checkbox" />
+                    Remember me
                   </p>
                   <p>Need Help?</p>
                 </div>
-                <p className="py-4">
+                <p className="py-20">
                   <span className="text-gray-600">
                     Already subscribed to Netflix?
                   </span>{" "}
-                  <Link to="signin">Sign In</Link>
-                  Sign In
+                  <Link to="signin"> Sign In </Link>
                 </p>
               </form>
             </div>
